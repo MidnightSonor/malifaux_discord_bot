@@ -35,12 +35,19 @@ async def on_message(message):
 	if message.content.startswith('$'):
 		command, *other = message.content.split()
 		print(command)
+		print(other)
 		if command == "$draw":
-			card = curr_deck.draw()
-			curr_deck.discard(card)
-			await message.channel.send(f"Card drew: {card}")
-			if curr_deck.empty is True:
-				await message.channel.send("Deck's empty, reshuffle")
+			if other:
+				for i in range(int(other[0])):
+					card = curr_deck.draw()
+					curr_deck.discard(card)
+					await message.channel.send(f"Card drew: {card}")
+					#print(curr_deck.discarded, curr_deck.cards_left)
+					if curr_deck.cards_left == 1:
+						await message.channel.send("Deck's empty, reshuffle")
+					#	curr_deck.shuffle_back()
+					#	curr_deck.shuffle()
+			else:
 				curr_deck.shuffle_back()
 				curr_deck.shuffle()
 		if command == "$discard":
