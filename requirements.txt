@@ -1,5 +1,4 @@
 pyCardDeck
 asyncio
-time
 discord
 dotenv
