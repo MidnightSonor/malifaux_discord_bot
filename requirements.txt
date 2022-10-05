@@ -1,5 +1,5 @@
+ez_setup
 pyCardDeck
 asyncio
 discord
 dotenv
-ez_setup
