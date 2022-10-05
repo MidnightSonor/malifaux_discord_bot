@@ -4,7 +4,7 @@ import asyncio
 import time
 import discord
 from dotenv import load_dotenv
-DISCORD_TOKEN = 'OTkyNDI3NTQ2MDgxNzY3NDc5.GJmSaF.TI3MvRkp0rejRAtqa1yJucbEJicJwFn1STT81o'
+
 def malifaux_fate_deck():
 	deck = []
 	suits = ['Rams', 'Tomes', 'Masks', 'Crows']
@@ -17,7 +17,7 @@ def malifaux_fate_deck():
 
 load_dotenv()
 users_dict = dict()
-TOKEN = os.getenv(DISCORD_TOKEN)
+TOKEN = os.getenv('DISCORD_TOKEN')
 client = discord.Client()
 print(TOKEN)
 
