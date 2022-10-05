@@ -1,0 +1,6 @@
+pyCardDeck
+os
+asyncio
+time
+discord
+dotenv
