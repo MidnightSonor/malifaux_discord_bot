@@ -45,7 +45,7 @@ def malifaux_twist_deck(code_list):
 load_dotenv()
 #users_dict = dict()
 TOKEN = os.getenv('DISCORD_TOKEN')
-client = discord.Client(intents=discord.Intents.default())
+client = discord.Client(intents=discord.Intents.all())
 print(TOKEN)
 
 f_deck = pyCardDeck.Deck(cards=malifaux_fate_deck(), name="Fate Deck")
