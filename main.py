@@ -46,7 +46,7 @@ load_dotenv()
 #users_dict = dict()
 TOKEN = os.getenv('DISCORD_TOKEN')
 client = discord.Client(intents=discord.Intents.all())
-print(TOKEN)
+#print(TOKEN)
 
 f_deck = pyCardDeck.Deck(cards=malifaux_fate_deck(), name="Fate Deck")
 f_deck.shuffle()
@@ -63,27 +63,21 @@ async def on_message(message):
 	#global f_deck
 	if message.content.startswith('$'):
 		command, *other = message.content.split()
-		print(command)
-		print(other)
+		#print(command)
+		#print(other)
 		if command == "$draw":
-			if other:
-				for i in range(int(other[0])):
-					card = f_deck.draw()
-					f_deck.discard(card)
-					await message.channel.send(f"Card drew: {card}")
-					#print(f_deck.discarded, f_deck.cards_left)
-					if f_deck.cards_left == 1:
-						await message.channel.send("Deck's empty, reshuffle")
-					#	f_deck.shuffle_back()
-					#	f_deck.shuffle()
-			else:
+			if not other:
+				other.append(1)
+			for i in range(int(other[0])):
 				card = f_deck.draw()
 				f_deck.discard(card)
-				await message.channel.send(f"Card drew: {card}")
+				await message.channel.send(f"{message.author.name} drew {card} from Fate Deck")
+				#print(f_deck.discarded, f_deck.cards_left)
 				if f_deck.cards_left == 1:
-					await message.channel.send("Deck's empty, reshuffle")
+					await message.channel.send("Fate Deck is empty")
+					await message.channel.send("Fate Deck has been shuffled")
 		if command == "$discard":
-			await message.channel.send(f"Discard pile: {f_deck._discard_pile}")
+			await message.channel.send(f"Fate Deck's discard pile: {f_deck._discard_pile}")
 		if command == "$shuffle":
 			f_deck.shuffle_back()
 			f_deck.shuffle()
@@ -98,34 +92,30 @@ async def on_message(message):
 				await message.channel.send(f"{message.author.name} creates Twist Deck")
 			if command.find("draw") > -1:
 				#print("HERE2")
-				if other:
-					for i in range(int(other[0])):
-						tw_card = tw_decs[message.author.name].draw()
-						tw_hands[message.author.name].add_single(tw_card)
-						#tw_decs[message.author.name].discard(tw_card)
-						await message.channel.send(f"Card drew: {tw_card}")
-						#print(f_deck.discarded, f_deck.cards_left)
-						if tw_decs[message.author.name].cards_left == 1:
-							await message.channel.send("Deck's empty, reshuffle")
-							#	f_deck.shuffle_back()
-							#	f_deck.shuffle()
-				else:
+				if not other:
+					other.append(1)
+				for i in range(int(other[0])):
 					tw_card = tw_decs[message.author.name].draw()
+					tw_hands[message.author.name].add_single(tw_card)
 					#tw_decs[message.author.name].discard(tw_card)
-					await message.channel.send(f"Card drew: {tw_card}")
+					await message.channel.send(f"{message.author.name} drew {tw_card} from Twist Deck(№{len(tw_hands[message.author.name]._cards)})")
+					#print(f_deck.discarded, f_deck.cards_left)
 					if tw_decs[message.author.name].cards_left == 1:
-						await message.channel.send("TWdeck's empty, reshuffle")
+						await message.channel.send(f"{message.author.name}'s Twist Deck is empty")
+						await message.channel.send(f"{message.author.name}'s Twist Deck has been shuffled")
 			if command.find("hand") > -1:
 				await message.channel.send(f"{message.author.name}'s hand:{tw_hands[message.author.name]._cards}")
+					#(f"{message.author.name}'s hand: {list(set(tw_hands[message.author.name]._cards) - set(tw_hands[message.author.name]._discard_pile))}")
 			if command.find("card_use") > -1:
 				tw_card = tw_hands[message.author.name]._cards[int(other[0]) - 1]
-				await message.channel.send(f"{message.author.name} uses TD card: {tw_card}")
-				tw_hands[message.author.name].discard(tw_card)
+				await message.channel.send(f"{message.author.name} uses Twist Deck card: {tw_card}")
+				tw_hands[message.author.name]._cards.pop(int(other[0]) - 1)
 				tw_decs[message.author.name].discard(tw_card)
 			if command.find("discard") > -1:
-				await message.channel.send(f"{message.author.name}'s TD discard: {tw_hands[message.author.name]._discard_pile}")
+				await message.channel.send(f"{message.author.name}'s Twist Deck discard: {tw_hands[message.author.name]._discard_pile}")
 				#tw_card = tw_decs[message.author.name].draw()
 				#tw_hands[message.author.name] =
 				#tw_decs[message.author.name].discard(tw_card)
+
 
 client.run(TOKEN)
