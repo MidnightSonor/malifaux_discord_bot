@@ -48,10 +48,9 @@ TOKEN = os.getenv('DISCORD_TOKEN')
 client = discord.Client(intents=discord.Intents.all())
 #print(TOKEN)
 
-f_deck = pyCardDeck.Deck(cards=malifaux_fate_deck(), name="Fate Deck")
-f_deck.shuffle()
 tw_decs = dict()
 tw_hands = dict()
+f_decks = dict()
 
 @client.event
 async def on_ready():
@@ -65,28 +64,32 @@ async def on_message(message):
 		command, *other = message.content.split()
 		#print(command)
 		#print(other)
+		if command == "$create":
+			f_decks[message.guild] = pyCardDeck.Deck(cards=malifaux_fate_deck(), name="Fate Deck")
+			f_decks[message.guild].shuffle()
+			await message.channel.send(f"{message.author.name} creates Fate Deck")
 		if command == "$draw":
 			if not other:
 				other.append(1)
 			for i in range(int(other[0])):
-				card = f_deck.draw()
-				f_deck.discard(card)
+				card = f_decks[message.guild].draw()
+				f_decks[message.guild].discard(card)
 				await message.channel.send(f"{message.author.name} drew {card} from Fate Deck")
 				#print(f_deck.discarded, f_deck.cards_left)
-				if f_deck.cards_left == 1:
+				if f_decks[message.guild].cards_left == 1:
 					await message.channel.send("Fate Deck is empty")
 					await message.channel.send("Fate Deck has been shuffled")
 		if command == "$discard":
-			await message.channel.send(f"Fate Deck's discard pile: {f_deck._discard_pile}")
+			await message.channel.send(f"Fate Deck's discard pile: {f_decks[message.guild]._discard_pile}")
 		if command == "$shuffle":
-			f_deck.shuffle_back()
-			f_deck.shuffle()
+			f_decks[message.guild].shuffle_back()
+			f_decks[message.guild].shuffle()
 			await message.channel.send("Fate Deck has been shuffled")
 		if command.find("$twd_") > -1:
 			#print("HERE")
 			if command.find("create") > -1:
 				#print("HERE1")
-				tw_decs[message.author.name] = pyCardDeck.Deck(cards=malifaux_twist_deck(other), name="Twist Deck")
+				tw_decs[message.author.name] = pyCardDeck.Deck(cards=malifaux_twist_deck(other), name=f"{message.author.name}'s Twist Deck")
 				tw_decs[message.author.name].shuffle()
 				tw_hands[message.author.name] = pyCardDeck.Deck()
 				await message.channel.send(f"{message.author.name} creates Twist Deck")
@@ -116,6 +119,5 @@ async def on_message(message):
 				#tw_card = tw_decs[message.author.name].draw()
 				#tw_hands[message.author.name] =
 				#tw_decs[message.author.name].discard(tw_card)
-
 
 client.run(TOKEN)
