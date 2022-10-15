@@ -101,7 +101,7 @@ async def on_message(message):
 					tw_card = tw_decs[message.author.name].draw()
 					tw_hands[message.author.name].add_single(tw_card)
 					#tw_decs[message.author.name].discard(tw_card)
-					await message.channel.send(f"{message.author.name} drew {tw_card} from Twist Deck(№{len(tw_hands[message.author.name]._cards)})")
+					await message.channel.send(f"{message.author.name} drew {tw_card} from Twist Deck(№{tw_hands[message.author.name]._cards.index(str(tw_card))})")
 					#print(f_deck.discarded, f_deck.cards_left)
 					if tw_decs[message.author.name].cards_left == 1:
 						await message.channel.send(f"{message.author.name}'s Twist Deck is empty")
