@@ -123,13 +123,14 @@ async def on_message(message):
 				#tw_decs[message.author.name].discard(tw_card)
 		if command == '$help':
 			await message.channel.send('''
-				Fate Deck commands:
+			***Malifaux Deck Bot commands:***
+			**Fate Deck commands:**
 				`$create` - creates Fate Deck at current server
 				`$draw X` - draw X cards from existing Fate Deck
 				`$shuffle` - shuffle in discard pile and shuffle deck
 				`$discard` - show discard pile
 
-				Twist Deck commands for Twist Deck:
+			**Twist Deck commands for Twist Deck:**
 				`$twd_create ????` - create Twist Deck and Twist Hand for user, base on Deck code - 4 letters in priority order, ex.: mrct
 				`$twd_draw X` - draw X cards from user's existing Twist Deck to Twist Hand, show Twist Hand
 				`$twd_card_use N` - use card number N from existing Twist Hand and discard it, show Twist Hand
