@@ -67,7 +67,7 @@ async def on_message(message):
 		if command == "$create":
 			f_decks[message.guild] = pyCardDeck.Deck(cards=malifaux_fate_deck(), name="Fate Deck")
 			f_decks[message.guild].shuffle()
-			await message.channel.send(f"{message.author.name} creates Fate Deck")
+			await message.channel.send(f"**{message.author.name}** creates Fate Deck on `{message.guild}`")
 		if command == "$draw":
 			if not other:
 				other.append(1)
@@ -101,13 +101,13 @@ async def on_message(message):
 					tw_card = tw_decs[message.author.name].draw()
 					tw_hands[message.author.name].add_single(tw_card)
 					#tw_decs[message.author.name].discard(tw_card)
-					await message.channel.send(f"{message.author.name} drew {tw_card} from Twist Deck")
+					await message.channel.send(f"{message.author.name} drew `{tw_card}` from Twist Deck")
 					#print(f_deck.discarded, f_deck.cards_left)
 					if tw_decs[message.author.name].cards_left == 1:
 						await message.channel.send(f"{message.author.name}'s Twist Deck is empty")
 						await message.channel.send(f"{message.author.name}'s Twist Deck has been shuffled")
 			if command.find("hand") > -1:
-				await message.channel.send(f"{message.author.name}'s hand:{tw_hands[message.author.name]._cards}")
+				await message.channel.send(f"**{message.author.name}** 's hand:`{tw_hands[message.author.name]._cards}`")
 					#(f"{message.author.name}'s hand: {list(set(tw_hands[message.author.name]._cards) - set(tw_hands[message.author.name]._discard_pile))}")
 			if command.find("card_use") > -1:
 				tw_card = tw_hands[message.author.name]._cards[int(other[0]) - 1]
