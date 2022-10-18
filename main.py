@@ -65,7 +65,7 @@ async def on_message(message):
 		#print(command)
 		#print(other)
 		if command == "$create":
-			f_decks[message.guild] = pyCardDeck.Deck(cards=malifaux_fate_deck(), name="Fate Deck")
+			f_decks[message.guild] = pyCardDeck.Deck(cards=malifaux_fate_deck(), name=f"{message.guild} Fate Deck")
 			f_decks[message.guild].shuffle()
 			await message.channel.send(f"**{message.author.name}** creates Fate Deck at `{message.guild}` guild")
 		if command == "$draw":
@@ -91,7 +91,7 @@ async def on_message(message):
 				#print("HERE1")
 				tw_decs[message.author.name] = pyCardDeck.Deck(cards=malifaux_twist_deck(other), name=f"{message.author.name}'s Twist Deck")
 				tw_decs[message.author.name].shuffle()
-				tw_hands[message.author.name] = pyCardDeck.Deck()
+				tw_hands[message.author.name] = list()
 				await message.channel.send(f"**{message.author.name}** creates Twist Deck")
 			if command.find("draw") > -1:
 				#print("HERE2")
@@ -99,23 +99,24 @@ async def on_message(message):
 					other.append(1)
 				for i in range(int(other[0])):
 					tw_card = tw_decs[message.author.name].draw()
-					tw_hands[message.author.name].add_single(tw_card)
+					tw_hands[message.author.name].append(str(tw_card))
 					#tw_decs[message.author.name].discard(tw_card)
 					await message.channel.send(f"**{message.author.name}** drew `{tw_card}` from Twist Deck")
-					await message.channel.send(f"**{message.author.name}** 's hand:`{tw_hands[message.author.name]._cards}`")
+					await message.channel.send(f"**{message.author.name}** 's hand:`{tw_hands[message.author.name]}`")
 					#print(f_deck.discarded, f_deck.cards_left)
 					if tw_decs[message.author.name].cards_left == 1:
 						await message.channel.send(f"**{message.author.name}** 's Twist Deck is empty")
 						await message.channel.send(f"**{message.author.name}** 's Twist Deck has been shuffled")
 			if command.find("hand") > -1:
-				await message.channel.send(f"**{message.author.name}** 's hand:`{tw_hands[message.author.name]._cards}`")
+				await message.channel.send(f"**{message.author.name}** 's hand:`{tw_hands[message.author.name]}`")
 					#(f"{message.author.name}'s hand: {list(set(tw_hands[message.author.name]._cards) - set(tw_hands[message.author.name]._discard_pile))}")
 			if command.find("card_use") > -1:
-				tw_card = tw_hands[message.author.name]._cards[int(other[0]) - 1]
+				tw_card = tw_hands[message.author.name][int(other[0]) - 1]
 				await message.channel.send(f"**{message.author.name}** uses Twist Deck card: `{tw_card}`")
-				tw_hands[message.author.name]._cards.pop(int(other[0]) - 1)
+				await message.channel.send(f"**{message.author.name}** 's hand:`{tw_hands[message.author.name]}`")
+				tw_hands[message.author.name].pop(int(other[0]) - 1)
 				tw_decs[message.author.name].discard(tw_card)
-			if command.find("discard") > -1:
+			if command.find("discard_pile") > -1:
 				await message.channel.send(f"**{message.author.name}** 's Twist Deck discard: `{tw_hands[message.author.name]._discard_pile}`")
 				#tw_card = tw_decs[message.author.name].draw()
 				#tw_hands[message.author.name] =
